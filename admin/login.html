@@ -90,7 +90,8 @@
             $('.modal-body').text(res.msg);
             $('#myModal').modal();
             if (res.code === 200) {
-              window.localStorage.setItem('token', res.token);
+              window.localStorage.setItem('token',res.token);
+              console.log(window.localStorage.setItem('token', res.token));
               $('#myModal').on('hidden.bs.modal', function (e) {
                 window.location.href = './index.html';
               })
