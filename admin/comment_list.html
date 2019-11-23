@@ -182,13 +182,13 @@
     <td>{{$value.state}}</td>
     <td class="text-center">
       {{if $value.state == '待审核'}}
-      <a href="javascript:editTr( 'rejected',11 );" data-id='{{$value.id}}' class="btn btn-warning btn-xs">批准</a>
+      <a href="javascript:editTr( 'rejected',11 );" data-id='{{$value.id}}' class="btn btn-warning btn-xs btn-pass">批准</a>
       {{else if $value.state == '已通过'}}
-      <a href="javascript:editTr( 'rejected',11 );" data-id='{{$value.id}}' class="btn btn-primary btn-xs">拒绝</a>
+      <a href="javascript:editTr( 'rejected',11 );" data-id='{{$value.id}}' class="btn btn-primary btn-xs  btn-deny">拒绝</a>
       {{else if $value.state == '已拒绝'}}
-      <a href="javascript:editTr( 'rejected',11 );" data-id='{{$value.id}}' class="btn btn-success btn-xs">通过</a>
+      <a href="javascript:editTr( 'rejected',11 );" data-id='{{$value.id}}' class="btn btn-success btn-xs btn-pass">通过</a>
       {{/if}}
-      <a href="javascript:editTr( 'trashed',11 );" data-id='{{$value.id}}' class="btn btn-danger btn-xs">删除</a>
+      <a href="javascript:editTr( 'trashed',11 );" data-id='{{$value.id}}' class="btn btn-danger btn-xs btn-delete">删除</a>
     </td>
   </tr>
   {{/each}}
@@ -244,6 +244,63 @@
         }
       })
       //页面一加载，就需要获取评论数据 加载 在 页面 结束
+
+      // 给拒绝按钮注册事件开始
+      $('tbody').on('click', '.btn-deny', function (e) {
+        e.preventDefault();
+        var id = $(this).attr('data-id');
+        $.post({
+          url: BigNew.comment_reject,
+          data: {
+            id: id
+          },
+          success: function (res) {
+            $.get({
+              url: BigNew.comment_list,
+              data: {
+                page: myPage,
+                perpage: perpage
+              },
+              success: function (res) {
+                if (res.code === 200) {
+                  var htmlStr = template('comment-list', res);
+                  $('tbody').html(htmlStr);
+                }
+              }
+            })
+          }
+        })
+      })
+      // 给拒绝按钮注册事件结束
+
+      // 给通过/批准按钮注册点击事件开始
+      $('tbody').on('click', '.btn-pass', function (e) {
+        e.preventDefault();
+        var id = $(this).attr('data-id');
+        $.post({
+          url: BigNew.comment_pass,
+          data: {
+            id: id
+          },
+          success: function (res) {
+            $.get({
+              url: BigNew.comment_list,
+              data: {
+                page: myPage,
+                perpage: perpage
+              },
+              success: function (res) {
+                if (res.code == 200) {
+                  var htmlStr = template('comment-list', res);
+                  $('tbody').html(htmlStr);
+                }
+              }
+            })
+          }
+        })
+      })
+
+      // 给通过/批准按钮注册点击事件结束
     })
   </script>
 </body>
