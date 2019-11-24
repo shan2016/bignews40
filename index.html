@@ -150,13 +150,27 @@
             <div class="common_wrap">
                 <h3><i class="fa fa-bar-chart"></i> 一周热门排行</h3>
                 <ul class="content_list hotrank_list">
-                    <li><span class="first">1</span><a href="#">神奇的水滴摄影，泡泡中的世界泡泡中的世界</a></li>
-                    <li><span class="second">2</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
-                    <li><span class="third">3</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
-                    <li><span>4</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
-                    <li><span>5</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
-                    <li><span>6</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
-                    <li><span>7</span><a href="#">神奇的水滴摄影，泡泡中的世界</a></li>
+                    <!-- <li><span class="first">1</span>
+                        <a href="#">神奇的水滴摄影，泡泡中的世界泡泡中的世界</a>
+                    </li>
+                    <li><span class="second">2</span>
+                        <a href="#">神奇的水滴摄影，泡泡中的世界</a>
+                    </li>
+                    <li><span class="third">3</span>
+                        <a href="#">神奇的水滴摄影，泡泡中的世界</a>
+                    </li>
+                    <li><span>4</span>
+                        <a href="#">神奇的水滴摄影，泡泡中的世界</a>
+                    </li>
+                    <li><span>5</span>
+                        <a href="#">神奇的水滴摄影，泡泡中的世界</a>
+                    </li>
+                    <li><span>6</span>
+                        <a href="#">神奇的水滴摄影，泡泡中的世界</a>
+                    </li>
+                    <li><span>7</span>
+                        <a href="#">神奇的水滴摄影，泡泡中的世界</a>
+                    </li> -->
                 </ul>
             </div>
             <div class="common_wrap">
@@ -258,8 +272,38 @@
        </div>
     {{/each}}
 </script>
+
+    <!-- 文章热门排行部分模板  -->
+    <script type="text/html" id="hotrank_list">
+    {{each data as value index}}
+       {{if index===0}}
+       <li><span class="first">1</span>
+       {{else if index===1}}
+       <li><span class="second">2</span>
+       {{else if index===2}}
+       <li><span class="third">3</span>
+       {{else}}
+        <li><span>{{index+1}}</span>
+       {{/if}}
+       <a href="./article.html?id={{value.id}}">{{value.title}}</a>
+        </li>
+    {{/each}}
+   </script>
+
     <script>
         $(function () {
+            // 文章搜索部分开始
+            $('.search_btn').on('click', function () {
+                // console.log('选中了');
+                $.get({
+                    url: 'http://localhost:8080/api/v1/index/search',
+                    success: function (res) {
+                        // console.log(res);
+                    }
+                })
+            });
+            // 文章搜索部分结束
+
 
             // 热点图部分开始
             $.get({
@@ -275,12 +319,23 @@
             $.get({
                 url: 'http://localhost:8080/api/v1/index/latest',
                 success: function (res) {
-                    console.log(res);
+                    // console.log(res);
                     var htmlStr = template('common_news_list', res);
                     $('.common_news').html(htmlStr);
                 }
             })
             // 最新资讯部分结束
+            // 文章热门排行开始
+            $.get({
+                url: 'http://localhost:8080/api/v1/index/rank',
+                success: function (res) {
+                    // console.log(res);
+                    var htmlStr = template('hotrank_list', res);
+                    // console.log(htmlStr);
+                    $('ul.hotrank_list').html(htmlStr);
+                }
+            })
+            // 文章热门排行结束
         })
     </script>
 </body>
